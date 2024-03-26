@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -23,7 +23,7 @@ final class UpdateColissimoParameterAction implements ActionInterface
     private ColissimoParameterRepositoryInterface $colissimoParameterRepository;
     private FormFactoryInterface $formFactory;
     private EventDispatcherInterface $dispatcher;
-    private FlashBagInterface $flashBag;
+    private RequestStack $requestStack;
     private TranslatorInterface $translator;
 
     public function __construct(
@@ -32,7 +32,7 @@ final class UpdateColissimoParameterAction implements ActionInterface
         ColissimoParameterRepositoryInterface $colissimoParameterRepository,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $dispatcher,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->templatingEngine = $templatingEngine;
@@ -40,7 +40,7 @@ final class UpdateColissimoParameterAction implements ActionInterface
         $this->colissimoParameterRepository = $colissimoParameterRepository;
         $this->formFactory = $formFactory;
         $this->dispatcher = $dispatcher;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
@@ -60,7 +60,7 @@ final class UpdateColissimoParameterAction implements ActionInterface
         if ($form->isSubmitted() && $form->isValid()) {
             $this->dispatcher->dispatch(new ColissimoParameterCredentialsHasherEvent($colissimoParameter));
 
-            $this->flashBag->add(
+            $this->requestStack->getSession()->getFlashBag()->add(
                 'success',
                 $this->translator->trans('clever_age.admin.ui.colissimo_parameter.success'),
             );

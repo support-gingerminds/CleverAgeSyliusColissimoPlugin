@@ -22,10 +22,7 @@
     "require": {
         "php": "^8.0",
         "ext-json": "*",
-        "sylius/sylius": "~1.12.0"
-    },
-    "conflict": {
-        "api-platform/core": "^2.6"
+        "sylius/sylius": "^v1.12"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
